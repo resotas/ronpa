@@ -2,15 +2,14 @@ const { Configuration, OpenAIApi } = require("openai");
 
 // OpenAI API設定
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY, // 環境変数を参照
+  apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
 module.exports = async (req, res) => {
-  console.log("リクエスト受信"); // デバッグログ
+  console.log("リクエスト受信"); // デバッグ用ログ
 
   if (req.method !== "POST") {
-	console.log("エラー: POSTリクエストのみ対応");
 	res.status(405).json({ error: "POSTリクエストのみ受け付けます。" });
 	return;
   }
@@ -18,59 +17,25 @@ module.exports = async (req, res) => {
   const { message } = req.body;
 
   if (!message) {
-	console.log("エラー: メッセージが空です");
 	res.status(400).json({ error: "メッセージが空です。" });
 	return;
   }
 
   try {
-<<<<<<< HEAD
-	console.log("OpenAIリクエスト送信:", message);
-	const completion = await openai.chat.completions.create({
-	  model: "gpt-3.5-turbo", // モデルを指定 (gpt-4も使用可能)
-	  messages: [
-		{ role: "system", content: "あなたは論破の達人です。" }, // システムメッセージ
-		{ role: "user", content: message }, // ユーザーからの入力メッセージ
-	  ],
-	  max_tokens: 150, // 応答の最大トークン数
-	  temperature: 0.7, // 応答のランダム性 (0に近いほど確定的)
-	});
-
-<<<<<<< HEAD
-	console.log("OpenAIレスポンス:", completion.data);
-=======
-	// OpenAIの応答を返す
->>>>>>> parent of cf2bf583 (再デプロイ)
-	res.status(200).json({ text: completion.data.choices[0].message.content });
-=======
-	const completion = await openai.createCompletion({
-	  model: "text-davinci-003",
-	  prompt: `ユーザー: ${message}\nひろゆき:`,
-	  max_tokens: 150,
-	});
-
-	res.status(200).json({ text: completion.data.choices[0].text.trim() });
->>>>>>> parent of 6a93e227 (openai@4.74.0に対応)
-  } catch (error) {
-	console.error("OpenAI APIエラー:", error.message);
-	res.status(500).json({ error: error.message });
-  }
-};
-
-module.exports = async (req, res) => {
-  console.log("リクエスト受信");
-  try {
+	console.log("OpenAI APIリクエスト送信:", message);
 	const completion = await openai.chat.completions.create({
 	  model: "gpt-3.5-turbo",
 	  messages: [
 		{ role: "system", content: "あなたは論破の達人です。" },
-		{ role: "user", content: req.body.message },
+		{ role: "user", content: message },
 	  ],
+	  max_tokens: 150,
 	});
-	console.log("応答生成成功", completion.data);
+
+	console.log("OpenAI APIレスポンス:", completion.data);
 	res.status(200).json({ text: completion.data.choices[0].message.content });
   } catch (error) {
-	console.error("エラー:", error);
+	console.error("OpenAI APIエラー:", error.message);
 	res.status(500).json({ error: error.message });
   }
 };
