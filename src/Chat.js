@@ -20,8 +20,11 @@ function Chat() {
 	  const botMessage = { sender: "bot", text };
 	  setMessages((prev) => [...prev, botMessage]);
 	} catch (error) {
-	  console.error("APIリクエストエラー:", error);
-	  setMessages((prev) => [...prev, { sender: "bot", text: "エラーが発生しました。" }]);
+	  console.error("Error:", error);
+	  setMessages((prev) => [
+		...prev,
+		{ sender: "bot", text: "エラーが発生しました。" },
+	  ]);
 	}
 	setInput("");
   };
