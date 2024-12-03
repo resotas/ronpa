@@ -2,7 +2,7 @@ const { Configuration, OpenAIApi } = require("openai");
 
 // OpenAI API設定
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY, // 環境変数からAPIキーを取得
+  apiKey: process.env.OPENAI_API_KEY, // 環境変数を参照
 });
 const openai = new OpenAIApi(configuration);
 
@@ -24,6 +24,7 @@ module.exports = async (req, res) => {
   }
 
   try {
+<<<<<<< HEAD
 	console.log("OpenAIリクエスト送信:", message);
 	const completion = await openai.chat.completions.create({
 	  model: "gpt-3.5-turbo", // モデルを指定 (gpt-4も使用可能)
@@ -41,6 +42,15 @@ module.exports = async (req, res) => {
 	// OpenAIの応答を返す
 >>>>>>> parent of cf2bf583 (再デプロイ)
 	res.status(200).json({ text: completion.data.choices[0].message.content });
+=======
+	const completion = await openai.createCompletion({
+	  model: "text-davinci-003",
+	  prompt: `ユーザー: ${message}\nひろゆき:`,
+	  max_tokens: 150,
+	});
+
+	res.status(200).json({ text: completion.data.choices[0].text.trim() });
+>>>>>>> parent of 6a93e227 (openai@4.74.0に対応)
   } catch (error) {
 	console.error("OpenAI APIエラー:", error.message);
 	res.status(500).json({ error: error.message });
