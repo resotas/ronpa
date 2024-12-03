@@ -6,6 +6,8 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 module.exports = async (req, res) => {
+  console.log("リクエスト受信:", req.body);
+
   if (req.method !== "POST") {
 	res.status(405).json({ error: "POSTリクエストのみ受け付けます。" });
 	return;
@@ -30,7 +32,7 @@ module.exports = async (req, res) => {
 
 	res.status(200).json({ text: completion.data.choices[0].message.content });
   } catch (error) {
-	console.error("OpenAIエラー:", error.message);
-	res.status(500).json({ error: error.message });
+	console.error("APIエラー:", error.message);
+	res.status(500).json({ error: "サーバーエラーが発生しました。" });
   }
 };

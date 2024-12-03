@@ -11,12 +11,12 @@ function Chat() {
 	setMessages((prev) => [...prev, userMessage]); // ユーザーのメッセージを追加
 
 	try {
-	  const response = await fetch("/api/generate-response", {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ message: input }),
-	  });
-
+const response = await fetch("/api/generate-response", {
+	  method: "POST",
+	  headers: { "Content-Type": "application/json" },
+	  body: JSON.stringify({ message: input }),
+	});
+		
 	  if (!response.ok) {
 		throw new Error(`APIリクエストエラー: ${response.status}`);
 	  }
