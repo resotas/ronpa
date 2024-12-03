@@ -10,17 +10,22 @@ function Chat() {
 	const userMessage = { sender: "user", text: input };
 	setMessages([...messages, userMessage]);
 
-	const response = await fetch("/api/generate-response", {
-	  method: "POST",
-	  headers: {
-		"Content-Type": "application/json",
-	  },
-	  body: JSON.stringify({ message: input }),
-	});
-
-	const { text } = await response.json();
-	const botMessage = { sender: "bot", text };
-	setMessages((prev) => [...prev, botMessage]);
+	try {
+	  const response = await fetch("/api/generate-response", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ message: input }),
+	  });
+	  const { text } = await response.json();
+	  const botMessage = { sender: "bot", text };
+	  setMessages((prev) => [...prev, botMessage]);
+	} catch (error) {
+	  console.error("Error:", error);
+	  setMessages((prev) => [
+		...prev,
+		{ sender: "bot", text: "エラーが発生しました。" },
+	  ]);
+	}
 	setInput("");
   };
 
