@@ -37,3 +37,21 @@ module.exports = async (req, res) => {
 	res.status(500).json({ error: error.message });
   }
 };
+
+module.exports = async (req, res) => {
+  console.log("リクエスト受信");
+  try {
+	const completion = await openai.chat.completions.create({
+	  model: "gpt-3.5-turbo",
+	  messages: [
+		{ role: "system", content: "あなたは論破の達人です。" },
+		{ role: "user", content: req.body.message },
+	  ],
+	});
+	console.log("応答生成成功", completion.data);
+	res.status(200).json({ text: completion.data.choices[0].message.content });
+  } catch (error) {
+	console.error("エラー:", error);
+	res.status(500).json({ error: error.message });
+  }
+};
