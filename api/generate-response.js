@@ -1,7 +1,7 @@
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY, // Vercelで設定した環境変数
+  apiKey: process.env.OPENAI_API_KEY, // 環境変数を参照
 });
 
 const openai = new OpenAIApi(configuration);
@@ -24,12 +24,11 @@ module.exports = async (req, res) => {
 	  model: "text-davinci-003",
 	  prompt: `ユーザー: ${message}\nひろゆき:`,
 	  max_tokens: 150,
-	  temperature: 0.7,
 	});
 
 	res.status(200).json({ text: completion.data.choices[0].text.trim() });
   } catch (error) {
-	console.error("エラー:", error.message);
-	res.status(500).json({ error: "APIエラーが発生しました。" });
+	console.error("OpenAI APIエラー:", error.message);
+	res.status(500).json({ error: error.message });
   }
 };
