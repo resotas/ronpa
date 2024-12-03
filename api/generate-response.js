@@ -1,7 +1,7 @@
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY, // 環境変数を参照
+  apiKey: process.env.OPENAI_API_KEY, // 環境変数からAPIキーを取得
 });
 
 const openai = new OpenAIApi(configuration);
@@ -20,13 +20,18 @@ module.exports = async (req, res) => {
   }
 
   try {
-	const completion = await openai.createCompletion({
-	  model: "text-davinci-003",
-	  prompt: `ユーザー: ${message}\nひろゆき:`,
-	  max_tokens: 150,
+	const completion = await openai.chat.completions.create({
+	  model: "gpt-3.5-turbo", // モデルを指定 (gpt-4も使用可能)
+	  messages: [
+		{ role: "system", content: "あなたは論破の達人です。" }, // システムメッセージ
+		{ role: "user", content: message }, // ユーザーからの入力メッセージ
+	  ],
+	  max_tokens: 150, // 応答の最大トークン数
+	  temperature: 0.7, // 応答のランダム性 (0に近いほど確定的)
 	});
 
-	res.status(200).json({ text: completion.data.choices[0].text.trim() });
+	// OpenAIの応答を返す
+	res.status(200).json({ text: completion.data.choices[0].message.content });
   } catch (error) {
 	console.error("OpenAI APIエラー:", error.message);
 	res.status(500).json({ error: error.message });
