@@ -30,6 +30,7 @@ module.exports = async (req, res) => {
 
 	res.status(200).json({ text: completion.data.choices[0].message.content });
   } catch (error) {
+	console.error("OpenAIエラー:", error.message);
 	res.status(500).json({ error: error.message });
   }
 };
