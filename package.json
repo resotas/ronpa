@@ -27,6 +27,7 @@
     ]
   },
   "devDependencies": {
+    "gopd": "^1.2.0",
     "webpack": "^5.97.0",
     "workbox-webpack-plugin": "^7.3.0"
   }
