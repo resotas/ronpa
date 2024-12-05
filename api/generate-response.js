@@ -40,3 +40,5 @@ export default async function handler(req, res) {
 	return res.status(500).json({ error: error.message || "Internal Server Error" });
   }
 }
+
+console.log("Environment Variable OPENAI_API_KEY:", process.env.OPENAI_API_KEY);
