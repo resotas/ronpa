@@ -1,9 +1,10 @@
 {
-  "version": 2,
-  "rewrites": [
-    { "source": "/static/(.*)", "destination": "/static/$1" },
-    { "source": "/api/(.*)", "destination": "/api/$1" }
-  ],
+  "functions": {
+    "api/generate-response.js": {
+      "memory": 512,
+      "maxDuration": 10
+    }
+  },
   "headers": [
     {
       "source": "/api/(.*)",
@@ -22,5 +23,8 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    { "source": "/static/(.*)", "destination": "/static/$1" }
   ]
 }

@@ -1,38 +1,41 @@
 import React, { useState } from "react";
 
 function Chat() {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([]); // チャットのメッセージ履歴を管理
+  const [input, setInput] = useState(""); // 入力内容を管理
 
   const sendMessage = async () => {
-	if (!input) return;
+	if (!input) return; // 入力が空の場合は何もしない
 
 	const userMessage = { sender: "user", text: input };
-	setMessages((prev) => [...prev, userMessage]);
+	setMessages((prev) => [...prev, userMessage]); // ユーザーのメッセージを追加
 
 	try {
-	  const response = await fetch("/api/generate-response", {
+	  // APIリクエスト
+	  const response = await fetch(`${process.env.REACT_APP_API_URL=https://ronpa.vercel.app || "/api"}/generate-response`, {
 		method: "POST",
-		headers: { "Content-Type": "application/json" },
+		headers: {
+		  "Content-Type": "application/json",
+		},
 		body: JSON.stringify({ message: input }),
 	  });
 
 	  if (!response.ok) {
-		throw new Error(`APIリクエストエラー: ${response.status}`);
+		throw new Error(`HTTP error! Status: ${response.status}`);
 	  }
 
-	  const { text } = await response.json();
-	  const botMessage = { sender: "bot", text };
-	  setMessages((prev) => [...prev, botMessage]);
+	  const data = await response.json(); // サーバーからのレスポンス
+	  const botMessage = { sender: "bot", text: data.text };
+	  setMessages((prev) => [...prev, botMessage]); // ボットのメッセージを追加
 	} catch (error) {
-	  console.error("APIリクエストエラー:", error);
+	  console.error("Error calling API:", error);
 	  setMessages((prev) => [
 		...prev,
 		{ sender: "bot", text: "サーバーエラーが発生しました。" },
 	  ]);
 	}
 
-	setInput("");
+	setInput(""); // 入力フィールドをクリア
   };
 
   return (
