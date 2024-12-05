@@ -27,12 +27,12 @@ module.exports = async (req, res) => {
 	  ],
 	});
 
-	res.status(200).json({ reply: completion.data.choices[0].message.content });
+	res.status(200).json({ text: completion.data.choices[0].message.content });
   } catch (error) {
-	console.error("エラー:", error.message);
+	console.error("サーバーエラー:", error);
 	res.status(500).json({
 	  error: "サーバーエラーが発生しました。",
-	  details: error.response ? error.response.data : error.message,
+	  details: error.message,
 	});
   }
 };
