@@ -20,19 +20,23 @@ export default async function handler(req, res) {
 	  return res.status(400).json({ error: "Message is required" });
 	}
 
+	console.log("Received message:", message); // デバッグ用ログ
+
 	// OpenAI API にリクエストを送信
-	const completion = await openai.createCompletion({
-	  model: "text-davinci-003", // 使用するモデル
-	  prompt: message,
+	const completion = await openai.createChatCompletion({
+	  model: "gpt-3.5-turbo", // 使用するモデル
+	  messages: [{ role: "user", content: message }],
 	  max_tokens: 100,
 	});
 
-	const responseText = completion.data.choices[0].text.trim();
+	console.log("Completion response:", completion.data); // デバッグ用ログ
+
+	const responseText = completion.data.choices[0].message.content.trim();
 
 	// クライアントにレスポンスを送信
 	return res.status(200).json({ text: responseText });
   } catch (error) {
-	console.error("Error in API function:", error);
-	return res.status(500).json({ error: "Internal Server Error" });
+	console.error("Error in API function:", error); // エラーログ
+	return res.status(500).json({ error: error.message || "Internal Server Error" });
   }
 }
