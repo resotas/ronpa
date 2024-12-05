@@ -1,38 +1,38 @@
-const { Configuration, OpenAIApi } = require("openai");
+import { Configuration, OpenAIApi } from "openai";
 
+// OpenAI の設定を初期化
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY, // 環境変数から API キーを取得
 });
+
 const openai = new OpenAIApi(configuration);
 
-module.exports = async (req, res) => {
-  if (req.method !== "POST") {
-	res.status(405).json({ error: "POSTリクエストのみ受け付けます。" });
-	return;
-  }
-
-  const { message } = req.body;
-
-  if (!message) {
-	res.status(400).json({ error: "メッセージが空です。" });
-	return;
-  }
-
+export default async function handler(req, res) {
   try {
-	const completion = await openai.createChatCompletion({
-	  model: "gpt-3.5-turbo",
-	  messages: [
-		{ role: "system", content: "あなたはひろゆき風の論破キャラクターです。" },
-		{ role: "user", content: message },
-	  ],
+	// POST メソッドのみを許可
+	if (req.method !== "POST") {
+	  return res.status(405).json({ error: "Method not allowed" });
+	}
+
+	const { message } = req.body;
+
+	if (!message) {
+	  return res.status(400).json({ error: "Message is required" });
+	}
+
+	// OpenAI API にリクエストを送信
+	const completion = await openai.createCompletion({
+	  model: "text-davinci-003", // 使用するモデル
+	  prompt: message,
+	  max_tokens: 100,
 	});
 
-	res.status(200).json({ text: completion.data.choices[0].message.content });
+	const responseText = completion.data.choices[0].text.trim();
+
+	// クライアントにレスポンスを送信
+	return res.status(200).json({ text: responseText });
   } catch (error) {
-	console.error("サーバーエラー:", error);
-	res.status(500).json({
-	  error: "サーバーエラーが発生しました。",
-	  details: error.message,
-	});
+	console.error("Error in API function:", error);
+	return res.status(500).json({ error: "Internal Server Error" });
   }
-};
+}
