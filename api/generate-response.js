@@ -1,7 +1,7 @@
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY, // 環境変数からAPIキーを取得
+  apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
@@ -22,12 +22,9 @@ module.exports = async (req, res) => {
 	const completion = await openai.createChatCompletion({
 	  model: "gpt-3.5-turbo",
 	  messages: [{ role: "user", content: message }],
-	  max_tokens: 100,
 	});
 
-	const reply = completion.data.choices[0].message.content.trim();
-
-	res.status(200).json({ text: reply });
+	res.status(200).json({ text: completion.data.choices[0].message.content });
   } catch (error) {
 	console.error("エラー:", error.message);
 	res.status(500).json({ error: "サーバーエラーが発生しました。" });
