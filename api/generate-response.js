@@ -21,12 +21,18 @@ module.exports = async (req, res) => {
   try {
 	const completion = await openai.createChatCompletion({
 	  model: "gpt-3.5-turbo",
-	  messages: [{ role: "user", content: message }],
+	  messages: [
+		{ role: "system", content: "あなたはひろゆき風の論破キャラクターです。" },
+		{ role: "user", content: message },
+	  ],
 	});
 
-	res.status(200).json({ text: completion.data.choices[0].message.content });
+	res.status(200).json({ reply: completion.data.choices[0].message.content });
   } catch (error) {
 	console.error("エラー:", error.message);
-	res.status(500).json({ error: "サーバーエラーが発生しました。" });
+	res.status(500).json({
+	  error: "サーバーエラーが発生しました。",
+	  details: error.response ? error.response.data : error.message,
+	});
   }
 };
