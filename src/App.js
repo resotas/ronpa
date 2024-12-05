@@ -40,7 +40,7 @@ function App() {
 
   return (
     <div className="chat-container">
-      <div className="chat-header">論破王ひろゆきチャット<br>僕を論破してください</div>
+      <div className="chat-header">論破王ひろゆきチャット</div>
       <div className="chat-messages">
         {messages.map((msg) => (
           <div key={msg.id} className={`message ${msg.sender}`}>
